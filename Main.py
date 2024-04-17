@@ -1,3 +1,7 @@
 import functions as FUNCTION
 
-FUNCTION.jeu()
+def main():
+    game = FUNCTION.Jeu()
+    game.debutPartie()
+
+main()
