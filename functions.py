@@ -12,18 +12,38 @@ class Personnage:
         self.niveau = niveau
         self.argent  = argent  
         self.inventaire = Inventaire()
+        if self.classe == "1":
+            self.classe = "Guerrier"
+            self.hp = 250
+            self.hp_max = 250
+            self.attaque = 20
+            self.defense = 15
+        elif self.classe == "2":
+            self.classe = "Mage"
+            self.hp = 200
+            self.hp_max = 200
+            self.attaque = 30
+            self.defense = 10
+        elif self.classe == "3":
+            self.classe = "Archer"
+            self.hp = 220
+            self.hp_max = 220
+            self.attaque = 25
+            self.defense = 12
+    def presentation(self):
+        print(f"Nom : {self.nom}, Classe : {self.classe}, Attaque : {self.attaque}, Defense : {self.defense}")
 
-    def est_en_vie(self):
+    def checkSiVivant(self):
         return self.hp > 0
 
     def afficher_stats(self):
-        print(f"{self.nom} - HP: {self.hp}/{self.hp_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
+        print(f"{self.nom} - Vie: {self.hp}/{self.hp_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
 
 class Ennemi(Personnage):
-    def __init__(self, nom, hp, attaque, defense, exp_recompense, or_recompense):
-        super().__init__(nom, "Ennemi", hp, attaque, defense)
-        self.exp_recompense = exp_recompense
-        self.or_recompense = or_recompense
+    def __init__(self, nom, vie, attaque, defense, exp_gagner, or_gagner):
+        super().__init__(nom, "Ennemi", vie, attaque, defense)
+        self.exp_recompense = exp_gagner
+        self.or_recompense = or_gagner
 
 class Objet:
     def __init__(self, nom, effet):
@@ -50,8 +70,10 @@ class Inventaire:
 class Jeu:
     def __init__(self):
         self.personnage = None
-        self.distance_jusqu_au_boss = random.randint(8, 12)
+        self.ennemie = self.generer_ennemi()
+        print(f"{self.ennemie.attaque} ennemie")
         self.distance_actuelle = 0
+        self.distance_jusqu_au_boss = random.randint(8, 12)
 
     def debutPartie(self):
         print("")
@@ -62,13 +84,21 @@ class Jeu:
         print("██████╔╝██║███████╗██║ ╚████║ ╚████╔╝ ███████╗██║ ╚████║╚██████╔╝███████╗")
         print("╚═════╝ ╚═╝╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝")
         nom_personnage = input("Entrez le nom de votre héros: ")
-        classe_personnage = input("Choisissez votre classe (Guerrier, Mage, Archer): ")
-        self.personnage = Personnage(nom_personnage, classe_personnage, 100, 20, 10)
+        classe_personnage = None
+        while classe_personnage not in ['1', '2', '3']:
+            classe_personnage = input("Choisissez votre classe (1. Guerrier, 2. Mage, 3. Archer): ")
+            if classe_personnage not in ['1', '2', '3']:
+                print("Choix invalide. Veuillez choisir une option parmi les trois proposées.")
+    
+        self.personnage = Personnage(nom_personnage, classe_personnage)
+        print("\nVoici votre personnage :")
+        self.personnage.presentation()
+        print("")
         self.menu_principal()
 
     def menu_principal(self):
-        while self.personnage.est_en_vie():
-            print("\nChoisissez une option parmis les suivantes: ")
+        while self.personnage.checkSiVivant():
+            print("Choisissez une option parmis les suivantes: \n")
             print("**************************")
             print("Menu Principal:")
             print("1. Explorer la Forêt")
@@ -102,7 +132,7 @@ class Jeu:
             print("Preparez vous a affronter le Boss!")
             boss = Ennemi("Ericter", 200, 25, 15, 100, 200)
             self.combat(self.personnage, boss)
-            if not boss.est_en_vie():
+            if not boss.checkSiVivant():
                 print("Vous avez vaincu le boss!")
                 print("Fin de la partie.")
                 return
@@ -151,18 +181,19 @@ class Jeu:
         print("⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️")
         print(f"Vous aller affronter un mini boss : {ennemi.nom}")
         print("⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️  ⚠️")
-        while heros.est_en_vie() and ennemi.est_en_vie():
+        while heros.checkSiVivant() and ennemi.checkSiVivant():
             heros.afficher_stats()
             ennemi.afficher_stats()
             action = input("Choisissez une action: Attaquer (1) / Utiliser un objet (2): ")
             if action == '1':
                 self.attaquer(heros, ennemi)
             elif action == '2':
-                nom_objet = input("Entrez le nom de l'objet que vous voulez utiliser: ")
-                if not self.personnage.inventaire.utiliser_objet(nom_objet, heros):
+                objetNom = input("Entrez le nom de l'objet que vous voulez utiliser: ")
+                if not self.personnage.inventaire.utiliser_objet(objetNom, heros):
                     print("Objet non trouvé ou non applicable.") 
-            if ennemi.est_en_vie():
+            if ennemi.checkSiVivant():
                 self.attaquer(ennemi, heros)
+
 
     def attaquer(self, attaquant, defenseur):
         degats = max(attaquant.attaque - defenseur.defense, 0)
@@ -174,12 +205,12 @@ class Jeu:
     def generer_ennemi(self):
         noms_ennemis = ['ogre', 'Spectre', 'Basilics', 'Minotaure']
         nom = random.choice(noms_ennemis)
-        hp = random.randint(50, 100)
+        vie = random.randint(50, 100)
         attaque = random.randint(5, 15)
         defense = random.randint(5, 10)
         exp_recompense = random.randint(5, 15)
         or_recompense = random.randint(10, 50)
-        return Ennemi(nom, hp, attaque, defense, exp_recompense, or_recompense)
+        return Ennemi(nom, vie, attaque, defense, exp_recompense, or_recompense)
 
     def trouver_aleatoire(self):
         decouvertes = ['argent', 'objet', 'exp']
