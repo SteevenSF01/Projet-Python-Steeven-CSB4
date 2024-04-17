@@ -1,3 +1,5 @@
+import random
+
 class Personnage:
     def __init__(self, classe=None):
         self.classe = classe
@@ -9,7 +11,7 @@ class Personnage:
         self.xp = 0
         self.niveau = 1
         self.inventaire = []
-        self.equipement = []
+        self.equipements = []
         self.position = 'village'
 
     def choix_classe(self, classe, nom):
@@ -30,18 +32,54 @@ class Personnage:
             self.xp = 0
             self.niveau = 1
             self.inventaire = []
-            self.equipement = []
+            self.equipements = []
             self.position = 'village'
             print(f"\n   Stats de votre personnage :\n   Nom :{self.nom}, classe : {self.classe}, Vie :{self.vie}, Attaque :{self.attaque}, Defense :{self.defense}\n")
         else:
             print("Classe invalide.")
+    def choixMainMenu(self, choix):
+        if choix == "1":
+            self.position = 'Forêt'
+            event = ["rien","ennemie","xp"]
+            if random.choice(event) == "ennemie":
+                ennemie = Ennemie()
+                ennemie.presentation()
+            elif random.choice(event) == "xp":
+                print("Vous avez trouvé de l'expérience.")
+                self.xp += random.randint(1,20)
+                print(f"Vous avez {self.xp} d'experience.")
+            elif random.choice(event) == "rien":
+                print("Il s'est rien passé.")
+            print(self.position)
+        elif choix == "2":
+            self.position = 'Village'
+            print(self.position)
+        elif choix == "3":
+            print(f"Vie :{self.vie}, Attaque :{self.attaque}, Defense :{self.defense}, Niveau :{self.niveau}")
+        elif choix == "4":
+            print(f"Argent :{self.argent},")
+            for equipement in self.equipements :
+                print(equipement)
 
 
-
+ennemie = ["Gobelin","Ogre","Spectre","Minotaure"]
+boss = ["Le Roi des Ombres","La Reine des Sorcières","Le Démon de la Destruction"]
 class Ennemie:
-    def __init__(self, nom, vie, attaque, defense, position):
-        self.nom = nom
-        self.vie = vie
-        self.attaque = attaque
-        self.defense = defense
-        self.position = position
+    def __init__(self):
+        self.nom = random.choice(ennemie)
+        self.vie = random.randint(35,50)
+        self.attaque = random.randint(8,12)
+        self.defense = random.randint(5,10)
+    def presentation (self):
+        print(f"Vous rencontrez un {self.nom}.")
+        print(f"Vie :{self.vie}, Attaque :{self.attaque}, Defense :{self.defense}")
+
+class Boss():
+    def __init__(self):
+        self.nom = random.choice(boss)
+        self.vie = random.randint(300,400)
+        self.attaque = random.randint(15,20)
+        self.defense = random.randint(15,20)
+    def presentation (self):
+        print(f"Vous rencontrez le boss {self.nom}.")
+        print(f"Vie :{self.vie}, Attaque :{self.attaque}, Defense :{self.defense}")
