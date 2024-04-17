@@ -1,14 +1,14 @@
 import random
 
 class Personnage:
-    def __init__(self, nom="", classe="", hp=0, attaque=0, defense=0, exp=0, niveau=1, argent =0):
+    def __init__(self, nom="", classe="", vie=0, attaque=0, defense=0, xp=0, niveau=1, argent =0):
         self.nom = nom
         self.classe = classe
-        self.hp = hp
-        self.hp_max = hp
+        self.hp = vie
+        self.hp_max = vie
         self.attaque = attaque
         self.defense = defense
-        self.exp = exp
+        self.exp = xp
         self.niveau = niveau
         self.argent  = argent  
         self.inventaire = Inventaire()
@@ -167,9 +167,9 @@ class Jeu:
     def attaquer(self, attaquant, defenseur):
         degats = max(attaquant.attaque - defenseur.defense, 0)
         defenseur.hp -= degats
-        print("👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼")
+        print("💥 💥 💥 💥 💥 💥 💥 💥 💥 💥 💥")
         print(f"{attaquant.nom} attaque {defenseur.nom} et cause {degats} de dégâts!")
-        print("👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼  👊🏼")
+        print("💥 💥 💥 💥 💥 💥 💥 💥 💥 💥 💥")
 
     def generer_ennemi(self):
         noms_ennemis = ['ogre', 'Spectre', 'Basilics', 'Minotaure']
@@ -187,9 +187,9 @@ class Jeu:
         if resultat == 'argent':
             quantite = random.randint(10, 50)
             self.personnage.inventaire.argent  += quantite
-            print("💸💸💸💸💸💸💸💸")
+            print("\n💸 💸 💸 💸 💸 💸 💸 💸")
             print(f"Vous avez trouvé {quantite} pièces d'argent!")
-            print("💸💸💸💸💸💸💸💸")
+            print("💸 💸 💸 💸 💸 💸 💸 💸\n")
         elif resultat == 'objet':
             objet = Objet("potion", lambda personnage: setattr(personnage, 'hp', min(personnage.hp + 50, personnage.hp_max)))
             self.personnage.inventaire.ajouter_objet(objet)
