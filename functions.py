@@ -37,7 +37,7 @@ class Personnage:
         return self.hp > 0
 
     def afficher_stats(self):
-        print(f"{self.nom} - Vie: {self.hp}/{self.hp_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
+        print(f"Nom: {self.nom} - Vie: {self.hp}/{self.hp_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
 
 class Ennemi(Personnage):
     def __init__(self, nom, vie, attaque, defense, exp_gagner, or_gagner):
@@ -102,22 +102,20 @@ class Jeu:
             print("**************************")
             print("Menu Principal:")
             print("1. Explorer la Forêt")
-            print("2. Visiter le Village")
-            print("3. Vérifier les Statistiques")
-            print("4. Vérifier l'Inventaire")
-            print("5. Quitter le Jeu")
+            print("2. Vérifier les Statistiques et l'inventaire")
+            print("3. Visiter le Village")
+            print("4. Quitter le Jeu")
             print("**************************\n")
             choix = input("")
 
             if choix == '1':
                 self.explorer_foret()
             elif choix == '2':
-                self.visiter_village()
-            elif choix == '3':
                 self.personnage.afficher_stats()
-            elif choix == '4':
                 self.verifier_inventaire()
-            elif choix == '5':
+            elif choix == '3':
+                self.visiter_village()
+            elif choix == '4':
                 print("")
                 print("Aurevoir, à bientot!")
                 print("")
