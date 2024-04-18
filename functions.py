@@ -4,8 +4,8 @@ class Personnage:
     def __init__(self, nom="", classe="", vie=0, attaque=0, defense=0, xp=0, niveau=1, argent =0):
         self.nom = nom
         self.classe = classe
-        self.hp = vie
-        self.hp_max = vie
+        self.vie = vie
+        self.vie_max = vie
         self.attaque = attaque
         self.defense = defense
         self.exp = xp
@@ -14,30 +14,30 @@ class Personnage:
         self.inventaire = Inventaire()
         if self.classe == "1":
             self.classe = "Guerrier"
-            self.hp = 250
-            self.hp_max = 250
+            self.vie = 250
+            self.vie_max = 250
             self.attaque = 20
             self.defense = 15
         elif self.classe == "2":
             self.classe = "Mage"
-            self.hp = 200
-            self.hp_max = 200
+            self.vie = 200
+            self.vie_max = 200
             self.attaque = 30
             self.defense = 10
         elif self.classe == "3":
             self.classe = "Archer"
-            self.hp = 220
-            self.hp_max = 220
+            self.vie = 220
+            self.vie_max = 220
             self.attaque = 25
             self.defense = 12
     def presentation(self):
         print(f"Nom : {self.nom}, Classe : {self.classe}, Attaque : {self.attaque}, Defense : {self.defense}")
 
     def checkSiVivant(self):
-        return self.hp > 0
+        return self.vie > 0
 
     def afficher_stats(self):
-        print(f"Nom: {self.nom} - Vie: {self.hp}/{self.hp_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
+        print(f"Nom: {self.nom} - Vie: {self.vie}/{self.vie_max}, Niveau: {self.niveau}, EXP: {self.exp}, Or: {self.argent }")
 
 class Ennemi(Personnage):
     def __init__(self, nom, vie, attaque, defense, exp_gagner, or_gagner):
@@ -161,7 +161,7 @@ class Jeu:
             choix = input("")
             if choix == '1':
                 if self.personnage.argent  >= 10:
-                    self.personnage.hp = self.personnage.hp_max
+                    self.personnage.vie = self.personnage.vie_max
                     self.personnage.argent  -= 10
                     print("Vous avez récupéré toutes votre vie.")
                 else:
@@ -220,7 +220,7 @@ class Jeu:
             print(f"Vous avez trouvé {quantite} pièces d'argent!")
             print("💸 💸 💸 💸 💸 💸 💸 💸\n")
         elif resultat == 'objet':
-            objet = Objet("potion", lambda personnage: setattr(personnage, 'hp', min(personnage.hp + 50, personnage.hp_max)))
+            objet = Objet("potion", lambda personnage: setattr(personnage, 'vie', min(personnage.vie + 50, personnage.vie_max)))
             self.personnage.inventaire.ajouter_objet(objet)
             print("🏺🏺🏺🏺🏺🏺🏺🏺")
             print("Vous avez trouvé une potion!")
@@ -241,12 +241,12 @@ class Jeu:
     def magasin(self):
         objets_a_vendre = {
             'Potion': (5, lambda personnage: setattr(personnage, 'hp', min(personnage.hp + 50, personnage.hp_max))),
-            'Super Potion': (20, lambda personnage: setattr(personnage, 'hp', personnage.hp_max))
         }
         print("Objets à la vente:")
         for objet, details in objets_a_vendre.items():
             print(f"{objet}: {details[0]} pièces d'or")
         achat = input("Choisissez l'objet que vous voulez acheter? ").capitalize()
+        print(f"Votre choix {achat}")
         if achat in objets_a_vendre and self.personnage.inventaire.argent  >= objets_a_vendre[achat][0]:
             self.personnage.inventaire.argent  -= objets_a_vendre[achat][0]
             nouvel_objet = Objet(achat, objets_a_vendre[achat][1])
