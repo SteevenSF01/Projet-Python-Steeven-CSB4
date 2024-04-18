@@ -13,19 +13,19 @@ class Personnage:
         self.argent  = argent  
         self.inventaire = Inventaire()
         if self.classe == "1":
-            self.classe = "Guerrier"
+            self.classe = "Paladin"
             self.vie = 250
             self.vie_max = 250
             self.attaque = 20
             self.defense = 15
         elif self.classe == "2":
-            self.classe = "Mage"
+            self.classe = "Druide"
             self.vie = 200
             self.vie_max = 200
             self.attaque = 30
             self.defense = 10
         elif self.classe == "3":
-            self.classe = "Archer"
+            self.classe = "Demoniste"
             self.vie = 220
             self.vie_max = 220
             self.attaque = 25
@@ -86,7 +86,7 @@ class Jeu:
         nom_personnage = input("Entrez le nom de votre héros: ")
         classe_personnage = None
         while classe_personnage not in ['1', '2', '3']:
-            classe_personnage = input("Choisissez votre classe (1. Guerrier, 2. Mage, 3. Archer): ")
+            classe_personnage = input("Choisissez votre classe (1. Paladin, 2. Druide, 3. Demoniste): ")
             if classe_personnage not in ['1', '2', '3']:
                 print("Choix invalide. Veuillez choisir une option parmi les trois proposées.")
     
@@ -102,20 +102,16 @@ class Jeu:
             print("**************************")
             print("Menu Principal:")
             print("1. Explorer la Forêt")
-            print("2. Vérifier les Statistiques et l'inventaire")
-            print("3. Visiter le Village")
-            print("4. Quitter le Jeu")
+            print("2. Visiter le Village")
+            print("3. Quitter le Jeu")
             print("**************************\n")
             choix = input("")
 
             if choix == '1':
                 self.explorer_foret()
             elif choix == '2':
-                self.personnage.afficher_stats()
-                self.verifier_inventaire()
-            elif choix == '3':
                 self.visiter_village()
-            elif choix == '4':
+            elif choix == '3':
                 print("")
                 print("Aurevoir, à bientot!")
                 print("")
@@ -150,13 +146,15 @@ class Jeu:
 
     def visiter_village(self):
         print("Bienvenue al 'Pueblo'!")
+        print("Vous pouvez check vos stats, acheter des potions et vous reposer en échange d'argent")
         while True:
             print("\nChoisissez une option parmis les suivantes: ")
             print("******************************")
             print("Menu del Pueblo:")
-            print("1. Dormir à l'auberge (Coûte 10 Pièces d'Or)")
-            print("2. Magasin")
-            print("3. Retourner au Menu Principal")
+            print("1. Vous reposez")
+            print("2. Vérifier les Statistiques et l'inventaire")
+            print("3. Magasin")
+            print("4. Retourner au Menu Principal")
             print("******************************")
             choix = input("")
             if choix == '1':
@@ -167,8 +165,11 @@ class Jeu:
                 else:
                     print("Malheureusemment vous n'avez pas assez de pièces d'or.")
             elif choix == '2':
-                self.magasin()
+                self.personnage.afficher_stats()
+                self.verifier_inventaire()
             elif choix == '3':
+                self.magasin()
+            elif choix == '4':
                 break
             else:
                 print("")
@@ -188,7 +189,7 @@ class Jeu:
             elif action == '2':
                 objetNom = input("Entrez le nom de l'objet que vous voulez utiliser: ")
                 if not self.personnage.inventaire.utiliser_objet(objetNom, heros):
-                    print("Objet non trouvé ou non applicable.") 
+                    print("Objet introuvable.") 
             if ennemi.checkSiVivant():
                 self.attaquer(ennemi, heros)
 
